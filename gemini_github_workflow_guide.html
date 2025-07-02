@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini CLI와 GitHub 연동 워크플로우: 파일 생성부터 푸시까지</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #fdfdfd;
+        }
+        h1, h2 {
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            color: #2c3e50;
+        }
+        .step {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        code {
+            background-color: #e8e8e8;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.95em;
+            color: #34495e;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        .note {
+            background-color: #e7f3fe;
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .danger {
+            background-color: #fff1f0;
+            border-left: 5px solid #ffccc7;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Gemini CLI & GitHub 워크플로우 가이드</h1>
+
+    <div class="note">
+        <strong>사전 조건:</strong> 이 가이드를 시작하기 전에 <strong>Gemini CLI와 GitHub MCP 연동</strong>이 반드시 완료되어 있어야 합니다. (<code>gemini_github_mcp_integration_detailed.html</code> 가이드 참고)
+    </div>
+
+    <!-- 1단계: GitHub 저장소 생성 -->
+    <div class="step">
+        <h2>1단계: GitHub에서 새 저장소(Repository) 생성</h2>
+        <ol>
+            <li><a href="https://github.com/new" target="_blank">GitHub 새 저장소 생성 페이지</a>로 이동합니다.</li>
+            <li><strong>Repository name</strong>에 원하는 이름(예: <code>gemini-test-project</code>)을 입력합니다.</li>
+            <li><strong>Public</strong> 또는 <strong>Private</strong>를 선택합니다.</li>
+            <li><strong>Create repository</strong> 버튼을 클릭하여 저장소를 생성합니다.</li>
+            <li>생성된 저장소 페이지에서 HTTPS URL을 복사합니다. (예: <code>https://github.com/YourUsername/gemini-test-project.git</code>)</li>
+        </ol>
+    </div>
+
+    <!-- 2단계: 로컬에 저장소 복제 -->
+    <div class="step">
+        <h2>2단계: 로컬 컴퓨터에 저장소 복제(Clone)</h2>
+        <p>터미널(또는 cmd)을 열고, 프로젝트를 저장할 위치로 이동한 후 다음 명령어를 실행합니다.</p>
+        <pre><code># 1단계에서 복사한 URL을 사용합니다.
+git clone https://github.com/YourUsername/gemini-test-project.git</code></pre>
+        <p>이제 <code>gemini-test-project</code>라는 이름의 폴더가 생성됩니다. 다음 명령어로 해당 폴더에 들어갑니다.</p>
+        <pre><code>cd gemini-test-project</code></pre>
+    </div>
+
+    <!-- 3단계: Gemini로 파일 생성 -->
+    <div class="step">
+        <h2>3단계: Gemini CLI로 <code>index.html</code> 파일 생성 요청</h2>
+        <p>이제 Gemini CLI를 사용하여 "hello world" 내용이 담긴 HTML 파일을 생성합니다. 터미널에서 Gemini를 실행합니다.</p>
+        <pre><code>gemini</code></pre>
+        <p>Gemini 프롬프트가 나타나면, 다음과 같이 요청합니다.</p>
+        <blockquote>
+            <p>현재 폴더에 'index.html' 파일을 만들어줘. 내용은 'hello world'라고 간단히 적어줘.</p>
+        </blockquote>
+        <p>Gemini가 파일 생성을 완료하면, <code>ls</code> (Mac/Linux) 또는 <code>dir</code> (Windows) 명령어로 <code>index.html</code> 파일이 잘 만들어졌는지 확인할 수 있습니다.</p>
+    </div>
+
+    <!-- 4단계: Git으로 파일 추가, 커밋, 푸시 -->
+    <div class="step">
+        <h2>4단계: 변경사항을 GitHub에 올리기 (Add, Commit, Push)</h2>
+        <p>생성된 파일을 GitHub 저장소에 올리기 위해 다음 Git 명령어들을 순서대로 실행합니다.</p>
+        <p><strong>1. 파일 추가 (Add):</strong> 변경된 파일을 스테이징 영역에 추가합니다.</p>
+        <pre><code>git add index.html</code></pre>
+        <p><strong>2. 커밋 (Commit):</strong> 변경사항에 대한 설명을 메시지로 남기고 로컬 저장소에 기록합니다.</p>
+        <pre><code>git commit -m "Add index.html with hello world"</code></pre>
+        <p><strong>3. 푸시 (Push):</strong> 로컬 저장소의 변경사항을 원격 GitHub 저장소로 업로드합니다.</p>
+        <pre><code>git push origin main</code></pre>
+        <div class="note">
+            브랜치 이름이 <code>main</code>이 아닌 <code>master</code>일 수 있습니다. 오류가 발생하면 <code>main</code>을 <code>master</code>로 변경하여 다시 시도해보세요.
+        </div>
+    </div>
+
+    <!-- 5단계: GitHub에서 확인 -->
+    <div class="step">
+        <h2>5단계: GitHub 저장소에서 최종 확인</h2>
+        <p>이제 브라우저에서 1단계에 생성했던 GitHub 저장소 페이지를 새로고침 해보세요.</p>
+        <p><code>index.html</code> 파일이 추가되었고, 커밋 메시지("Add index.html with hello world")가 기록된 것을 확인할 수 있습니다. 파일 이름을 클릭하면 "hello world" 내용도 볼 수 있습니다.</p>
+    </div>
+
+    <h2>🎉 완료</h2>
+    <p>축하합니다! Gemini CLI로 파일을 생성하고 GitHub에 성공적으로 업로드했습니다.</p>
+
+</body>
+</html>
